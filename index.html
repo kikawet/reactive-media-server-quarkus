@@ -1,0 +1,25 @@
+<html>
+<head>
+    <script src="https://localhost:8543/js/keycloak.js"></script>
+    <script>
+        function initKeycloak() {
+            const keycloak = new Keycloak({
+                url: 'https://localhost:8543',
+                realm: 'quarkus',
+                clientId: 'backend-service'
+            });
+            keycloak.init({
+    onLoad: 'login-required'
+}).then(function(authenticated) {
+                alert(authenticated ? 'authenticated' : 'not authenticated');
+                console.log(keycloak)
+            }).catch(function() {
+                alert('failed to initialize');
+            });
+        }
+    </script>
+</head>
+<body onload="initKeycloak()">
+    <!-- your page content goes here -->
+</body>
+</html>
