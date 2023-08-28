@@ -1,4 +1,4 @@
-package rms.resources.user;
+package rms.resources.User;
 
 import org.jboss.logging.Logger;
 
