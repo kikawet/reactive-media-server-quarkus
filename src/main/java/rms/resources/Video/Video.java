@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.NoArgsConstructor;
+import rms.resources.Suggestion.Suggestion;
 import rms.resources.UserView.UserView;
 
 @Entity
@@ -21,4 +22,6 @@ public class Video extends PanacheEntityBase {
     Boolean isPrivate;
     @OneToMany(mappedBy = "video")
     Set<UserView> views;
+    @OneToMany(mappedBy = "video")
+    Set<Suggestion> suggestions;
 }

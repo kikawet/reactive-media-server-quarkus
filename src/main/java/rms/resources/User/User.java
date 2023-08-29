@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import rms.resources.Suggestion.Suggestion;
 import rms.resources.UserView.UserView;
 
 @Entity
@@ -23,6 +24,8 @@ public class User extends PanacheEntityBase {
     String userName;
     @OneToMany(mappedBy = "user")
     List<UserView> history;
+    @OneToMany(mappedBy = "user")
+    List<Suggestion> suggestions;
 
     User(SecurityIdentity identity) {
         this.userName = identity.getPrincipal().getName();
