@@ -15,19 +15,19 @@ import rms.resources.Suggestion.Suggestion;
 import rms.resources.UserView.UserView;
 
 @Entity
-@Table(name = "user_table")
+@Table(name = "USERS")
 @Getter
 @Setter
 @NoArgsConstructor
 public class User extends PanacheEntityBase {
     @Id
-    String userName;
+    String login;
     @OneToMany(mappedBy = "user")
     List<UserView> history;
     @OneToMany(mappedBy = "user")
     List<Suggestion> suggestions;
 
     User(SecurityIdentity identity) {
-        this.userName = identity.getPrincipal().getName();
+        this.login = identity.getPrincipal().getName();
     }
 }

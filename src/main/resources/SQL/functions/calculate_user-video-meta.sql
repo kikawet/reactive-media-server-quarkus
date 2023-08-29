@@ -1,51 +1,49 @@
--- calculate_user-video-meta
-
 CREATE OR REPLACE FUNCTION CALCULATE_UVM(TIMEOFFSET
-INTERVAL) RETURNS TABLE("userLogin" TEXT, "videoTitle"
+INTERVAL) RETURNS TABLE("user_login" TEXT, "video_title"
 TEXT, "score" FLOAT8, "lastTimeView" timestamp, "timesPrompted"
 integer) AS
 $$
 	SELECT
-	    w."userLogin",
-	    w."videoTitle",
+	    w."user_login",
+	    w."video_title",
 	    ema(
-	        w."completionPercentage"
+	        w."completionpercentage"
 	        ORDER BY
 	            w."timestamp" DESC
 	    ) AS "score",
 	    MAX(w."timestamp") AS "lastTimeView",
-	    COUNT(w."origin") FILTER (
+	    COUNT(w."source") FILTER (
 	        WHERE
-	            w."origin" = 'System' :: "ViewOrigin"
+	            w."source" = 'System'
 	    )
-	FROM "View" AS w
+	FROM "userview" AS w
 	WHERE
 	    w."timestamp" >= (NOW() - timeoffset)
 	GROUP BY
-	    w."userLogin",
-	    w."videoTitle" $$ LANGUAGE
+	    w."user_login",
+	    w."video_title" $$ LANGUAGE
 SQL;
 
 CREATE OR REPLACE FUNCTION CALCULATE_UVM() RETURNS
-TABLE("userLogin" TEXT, "videoTitle" TEXT, "score"
+TABLE("user_login" TEXT, "video_title" TEXT, "score"
 FLOAT8, "lastTimeView" timestamp, "timesPrompted"
 integer) AS
 $$
 	SELECT
-	    w."userLogin",
-	    w."videoTitle",
+	    w."user_login",
+	    w."video_title",
 	    ema(
-	        w."completionPercentage"
+	        w."completionpercentage"
 	        ORDER BY
 	            w."timestamp" DESC
 	    ) AS "score",
 	    MAX(w."timestamp") AS "lastTimeView",
-	    COUNT(w."origin") FILTER (
+	    COUNT(w."source") FILTER (
 	        WHERE
-	            w."origin" = 'System' :: "ViewOrigin"
+	            w."source" = 'System'
 	    )
-	FROM "View" AS w
+	FROM "userview" AS w
 	GROUP BY
-	    w."userLogin",
-	    w."videoTitle" $$ LANGUAGE
+	    w."user_login",
+	    w."video_title" $$ LANGUAGE
 SQL;

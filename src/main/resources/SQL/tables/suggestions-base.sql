@@ -1,17 +1,15 @@
--- Cloned from Suggestion auto generated SQL
-
 CREATE TABLE IF NOT EXISTS "SuggestionBase"
 (
-    "userLogin" text COLLATE pg_catalog."default" NOT NULL,
-    "videoTitle" text COLLATE pg_catalog."default" NOT NULL,
+    "user_login" text COLLATE pg_catalog."default" NOT NULL,
+    "video_title" text COLLATE pg_catalog."default" NOT NULL,
     priority double precision NOT NULL,
-    CONSTRAINT "SuggestionBase_pkey" PRIMARY KEY ("userLogin", "videoTitle"),
-    CONSTRAINT "SuggestionBase_userLogin_fkey" FOREIGN KEY ("userLogin")
-        REFERENCES public."User" (login) MATCH SIMPLE
+    CONSTRAINT "SuggestionBase_pkey" PRIMARY KEY ("user_login", "video_title"),
+    CONSTRAINT "SuggestionBase_userLogin_fkey" FOREIGN KEY ("user_login")
+        REFERENCES public."users" (login) MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE RESTRICT,
-    CONSTRAINT "SuggestionBase_videoTitle_fkey" FOREIGN KEY ("videoTitle")
-        REFERENCES public."Video" (title) MATCH SIMPLE
+    CONSTRAINT "SuggestionBase_videoTitle_fkey" FOREIGN KEY ("video_title")
+        REFERENCES public."video" (title) MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE RESTRICT
 )

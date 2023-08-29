@@ -1,4 +1,3 @@
--- Active: 1658855706107@@127.0.0.1@5432@rmsDB
 create or replace function ema_func(agg_state float8,el float8) returns float8
   language plpgsql as $$
 declare
