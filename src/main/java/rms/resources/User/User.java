@@ -1,5 +1,6 @@
 package rms.resources.User;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
@@ -23,11 +24,12 @@ public class User extends PanacheEntityBase {
     @Id
     String login;
     @OneToMany(mappedBy = "user")
-    List<UserView> history;
+    List<UserView> history = Collections.emptyList();
     @OneToMany(mappedBy = "user")
-    List<Suggestion> suggestions;
+    List<Suggestion> suggestions = Collections.emptyList();
 
     User(SecurityIdentity identity) {
         this.login = identity.getPrincipal().getName();
     }
+
 }
