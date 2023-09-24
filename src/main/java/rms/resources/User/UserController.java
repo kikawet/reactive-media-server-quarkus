@@ -11,6 +11,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import rms.resources.Suggestion.Suggestion;
 import rms.resources.UserView.UserView;
 
 @Path("user")
@@ -29,7 +30,10 @@ public class UserController {
 
     @GET
     @Path("{userId}/suggestion")
-    public void getSuggestionByUser(@PathParam("userId") String user) {
-        throw new UnsupportedOperationException("Method not implemented yet");
+    public Uni<List<Suggestion>> getSuggestionsByUser(@PathParam("userId") String userId) {
+        Optional<User> user = User.findByIdOptional(userId);
+        return Uni.createFrom().optional(user)
+                .onItem().ifNull().failWith(new NotFoundException())
+                .onItem().ifNotNull().transform(User::getSuggestions);
     }
 }
