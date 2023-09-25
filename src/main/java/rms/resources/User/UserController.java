@@ -1,7 +1,6 @@
 package rms.resources.User;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.jboss.logging.Logger;
 
@@ -22,8 +21,8 @@ public class UserController {
     @GET
     @Path("{userId}/history")
     public Uni<List<UserView>> getHistoryByUser(@PathParam("userId") String userId) {
-        Optional<User> user = User.findByIdOptional(userId);
-        return Uni.createFrom().optional(user)
+        Uni<User> user = User.findById(userId);
+        return user
                 .onItem().ifNull().failWith(new NotFoundException())
                 .onItem().ifNotNull().transform(User::getHistory);
     }
@@ -31,8 +30,8 @@ public class UserController {
     @GET
     @Path("{userId}/suggestion")
     public Uni<List<Suggestion>> getSuggestionsByUser(@PathParam("userId") String userId) {
-        Optional<User> user = User.findByIdOptional(userId);
-        return Uni.createFrom().optional(user)
+        Uni<User> user = User.findById(userId);
+        return user
                 .onItem().ifNull().failWith(new NotFoundException())
                 .onItem().ifNotNull().transform(User::getSuggestions);
     }

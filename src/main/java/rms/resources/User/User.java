@@ -3,7 +3,7 @@ package rms.resources.User;
 import java.util.Collections;
 import java.util.List;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
