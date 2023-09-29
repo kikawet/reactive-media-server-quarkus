@@ -8,20 +8,24 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UserView extends PanacheEntityBase {
     @Id
     LocalDateTime timestamp;
-    Float completionPercentage;
-    @Enumerated(EnumType.STRING)
-    UserViewSource source;
     @Id
     @ManyToOne
     User user;
     @Id
     @ManyToOne
     Video video;
+    Float completionPercentage;
+    @Enumerated(EnumType.STRING)
+    UserViewSource source;
 }
