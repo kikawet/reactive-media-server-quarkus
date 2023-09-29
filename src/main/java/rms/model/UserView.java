@@ -1,4 +1,4 @@
-package rms.resources.UserView;
+package rms.model;
 
 import java.time.LocalDateTime;
 
@@ -9,8 +9,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.NoArgsConstructor;
-import rms.resources.User.User;
-import rms.resources.Video.Video;
 
 @Entity
 @NoArgsConstructor
@@ -19,7 +17,7 @@ public class UserView extends PanacheEntityBase {
     LocalDateTime timestamp;
     Float completionPercentage;
     @Enumerated(EnumType.STRING)
-    Source source;
+    UserViewSource source;
     @Id
     @ManyToOne
     User user;

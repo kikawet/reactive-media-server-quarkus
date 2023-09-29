@@ -1,18 +1,20 @@
-package rms.resources.Video;
+package rms.resources;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import io.quarkus.panache.mock.PanacheMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Uni;
+import rms.model.Video;
 
 @QuarkusTest
-public class VideoControllerTest {
+public class VideoResourceTests {
 
     @Test
     void Given_GetVideoByTitle_When_Video_Exists_Then_Get_VideoDTO() {
@@ -27,7 +29,7 @@ public class VideoControllerTest {
                 .get("/video/{title}")
                 .then()
                 .assertThat()
-                .statusCode(200)
+                .statusCode(HttpStatus.SC_OK)
                 .body("title", is(v.getTitle()))
                 .body("isPrivate", is(nullValue())); // Assert that this property is hidden
     }
@@ -46,7 +48,7 @@ public class VideoControllerTest {
                 .get("/video/{title}")
                 .then()
                 .assertThat()
-                .statusCode(404);
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Test
@@ -56,6 +58,6 @@ public class VideoControllerTest {
                 .when()
                 .get("/video/{title}")
                 .then()
-                .statusCode(404);
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 }

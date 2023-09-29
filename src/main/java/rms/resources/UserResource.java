@@ -1,23 +1,18 @@
-package rms.resources.User;
+package rms.resources;
 
 import java.util.List;
 
-import org.jboss.logging.Logger;
-
 import io.smallrye.mutiny.Uni;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
-import rms.resources.Suggestion.Suggestion;
-import rms.resources.UserView.UserView;
+import rms.model.Suggestion;
+import rms.model.User;
+import rms.model.UserView;
 
 @Path("user")
-public class UserController {
-    @Inject
-    private Logger logger;
-
+public class UserResource {
     @GET
     @Path("{userId}/history")
     public Uni<List<UserView>> getHistoryByUser(@PathParam("userId") String userId) {

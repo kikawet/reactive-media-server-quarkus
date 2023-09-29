@@ -1,4 +1,4 @@
-package rms.resources.Video;
+package rms.model;
 
 import java.net.URL;
 import java.time.Duration;
@@ -14,8 +14,6 @@ import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import rms.resources.Suggestion.Suggestion;
-import rms.resources.UserView.UserView;
 
 @Entity
 @Getter

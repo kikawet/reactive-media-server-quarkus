@@ -1,17 +1,19 @@
-package rms.resources.User;
+package rms.resources;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import io.quarkus.panache.mock.PanacheMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.mutiny.Uni;
+import rms.model.User;
 
 @QuarkusTest
-public class UserControllerTest {
+public class UserResourceTests {
 
     @Test
     void Given_GetHistoryByUser_When_User_Exists_Then_Get_History() {
@@ -26,7 +28,7 @@ public class UserControllerTest {
                 .get("/user/{login}/history")
                 .then()
                 .assertThat()
-                .statusCode(200)
+                .statusCode(HttpStatus.SC_OK)
                 .body("size()", is(0));
     }
 
@@ -37,7 +39,7 @@ public class UserControllerTest {
                 .when()
                 .get("/user/{login}/history")
                 .then()
-                .statusCode(404);
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Test
@@ -47,7 +49,7 @@ public class UserControllerTest {
                 .when()
                 .get("/user/{userId}/history")
                 .then()
-                .statusCode(404);
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Test
@@ -63,7 +65,7 @@ public class UserControllerTest {
                 .get("/user/{login}/suggestion")
                 .then()
                 .assertThat()
-                .statusCode(200)
+                .statusCode(HttpStatus.SC_OK)
                 .body("size()", is(0));
     }
 
@@ -74,7 +76,7 @@ public class UserControllerTest {
                 .when()
                 .get("/user/{login}/suggestion")
                 .then()
-                .statusCode(404);
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Test
@@ -84,7 +86,7 @@ public class UserControllerTest {
                 .when()
                 .get("/user/{userId}/suggestion")
                 .then()
-                .statusCode(404);
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
 }

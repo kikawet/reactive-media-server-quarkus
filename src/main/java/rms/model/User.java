@@ -1,4 +1,4 @@
-package rms.resources.User;
+package rms.model;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,8 +12,6 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import rms.resources.Suggestion.Suggestion;
-import rms.resources.UserView.UserView;
 
 @Entity
 @Table(name = "USERS")

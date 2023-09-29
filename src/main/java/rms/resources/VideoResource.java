@@ -1,4 +1,4 @@
-package rms.resources.Video;
+package rms.resources;
 
 import java.net.URI;
 import java.util.List;
@@ -12,9 +12,10 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
+import rms.model.Video;
 
 @Path("video")
-public class VideoController {
+public class VideoResource {
 
     @GET
     public Uni<List<Video>> getAll() {
@@ -29,7 +30,7 @@ public class VideoController {
         return video
                 .onItem().ifNull().failWith(new NotFoundException())
                 .onItem().ifNotNull().transform((Video v) -> {
-                    if (v.isPrivate)
+                    if (v.getIsPrivate())
                         throw new NotFoundException();
                     return v;
                 });
