@@ -3,6 +3,8 @@ package rms.model;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.persistence.Entity;
@@ -22,8 +24,10 @@ public class User extends PanacheEntityBase {
     @Id
     String login;
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     List<UserView> history = Collections.emptyList();
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     List<Suggestion> suggestions = Collections.emptyList();
 
     User(SecurityIdentity identity) {
