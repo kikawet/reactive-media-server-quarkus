@@ -1,7 +1,9 @@
 package rms.resources;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +24,7 @@ import rms.model.Video;
 @QuarkusTest
 public class UserViewResourceTests {
     @Test
-    void Given_Create_When_UserView_Valid_Then_Call_Persist() {
+    void Given_Create_When_UserView_Valid_Then_Get_Created() {
         PanacheMock.mock(User.class, Video.class);
 
         User u = new User();
@@ -51,5 +53,19 @@ public class UserViewResourceTests {
                 .body("userLogin", is(u.getLogin()))
                 .body("videoTitle", is(v.getTitle()))
                 .body("timestamp", is(Matchers.notNullValue()));
+    }
+
+    @Test
+    void Given_Create_When_UserView_Invalid_Then_Get_400() {
+
+        given()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .body("{}")
+                .when()
+                .post("/view")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("violations", is(not(empty())));
     }
 }

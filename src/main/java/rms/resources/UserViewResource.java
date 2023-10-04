@@ -8,6 +8,7 @@ import org.jboss.resteasy.reactive.ResponseStatus;
 import io.smallrye.mutiny.CompositeException;
 import io.smallrye.mutiny.Uni;
 import jakarta.validation.Valid;
+import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -24,14 +25,15 @@ public class UserViewResource {
         @POST
         @ResponseStatus(HttpStatus.SC_CREATED)
         public Uni<UserView> create(@Valid CreateUserViewDto userViewDto) {
-                Uni<User> userUni = User.findById(userViewDto.userLogin());
-                Uni<Video> videoUni = Video.findById(userViewDto.videoTitle());
+                Uni<User> userUni = User.findById(userViewDto.userLogin);
+                Uni<Video> videoUni = Video.findById(userViewDto.videoTitle);
 
                 userUni = userUni.onItemOrFailure().transform((user, exception) -> {
                         if (user == null || exception != null)
                                 throw new NotFoundException(
                                                 Response.status(HttpStatus.SC_NOT_FOUND).entity(
-                                                                "No user found with login: " + userViewDto.userLogin())
+                                                                "No user found with login: "
+                                                                                + userViewDto.userLogin)
                                                                 .build());
                         return user;
                 });
@@ -40,7 +42,7 @@ public class UserViewResource {
                                 throw new NotFoundException(
                                                 Response.status(HttpStatus.SC_NOT_FOUND).entity(
                                                                 "No video found with title: "
-                                                                                + userViewDto.videoTitle())
+                                                                                + userViewDto.videoTitle)
                                                                 .build());
                         return video;
                 });
@@ -51,23 +53,36 @@ public class UserViewResource {
                                 .collectFailures()
                                 .asTuple()
                                 .onFailure(CompositeException.class)
-                                .transform(fail -> {
-                                        return fail.getSuppressed()[0].getSuppressed()[0];
+                                .transform(fail -> fail.getSuppressed()[0].getSuppressed()[0])
+                                .onItem()
+                                .ifNotNull()
+                                .transform(tuple -> {
+                                        if (tuple.getItem2().getIsPrivate()) {
+                                                throw new ForbiddenException(Response
+                                                                .status(HttpStatus.SC_FORBIDDEN).entity(
+                                                                                "The video with title: "
+                                                                                                + userViewDto.videoTitle
+                                                                                                + " is private")
+                                                                .build());
+                                        }
+                                        return tuple;
                                 })
                                 .onItem()
                                 .ifNotNull()
-                                .transform(tuple ->
-                                // TODO: ensure user can see the video
-                                UserView.builder()
+                                .transform((tuple) -> UserView.builder()
                                                 .user(tuple.getItem1())
                                                 .video(tuple.getItem2())
-                                                .timestamp(userViewDto.timestamp().orElse(LocalDateTime.now()))
+                                                .timestamp(userViewDto.timestamp
+                                                                .orElse(LocalDateTime.now()))
                                                 .completionPercentage(
-                                                                userViewDto.completionPercentage().floatValue())
-                                                .source(userViewDto.source().orElse(UserViewSource.System))
+                                                                userViewDto.completionPercentage
+                                                                                .floatValue())
+                                                .source(userViewDto.source.orElse(UserViewSource.System))
                                                 .build())
                                 .onItem()
                                 .ifNotNull()
-                                .transformToUni(uv -> uv.persist());
+                                .transformToUni(uv -> {
+                                        return uv.persist();
+                                });
         }
 }
