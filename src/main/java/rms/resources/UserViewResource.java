@@ -25,15 +25,15 @@ public class UserViewResource {
         @POST
         @ResponseStatus(HttpStatus.SC_CREATED)
         public Uni<UserView> create(@Valid CreateUserViewDto userViewDto) {
-                Uni<User> userUni = User.findById(userViewDto.userLogin);
-                Uni<Video> videoUni = Video.findById(userViewDto.videoTitle);
+                Uni<User> userUni = User.findById(userViewDto.userLogin());
+                Uni<Video> videoUni = Video.findById(userViewDto.videoTitle());
 
                 userUni = userUni.onItemOrFailure().transform((user, exception) -> {
                         if (user == null || exception != null)
                                 throw new NotFoundException(
                                                 Response.status(HttpStatus.SC_NOT_FOUND).entity(
                                                                 "No user found with login: "
-                                                                                + userViewDto.userLogin)
+                                                                                + userViewDto.userLogin())
                                                                 .build());
                         return user;
                 });
@@ -42,7 +42,7 @@ public class UserViewResource {
                                 throw new NotFoundException(
                                                 Response.status(HttpStatus.SC_NOT_FOUND).entity(
                                                                 "No video found with title: "
-                                                                                + userViewDto.videoTitle)
+                                                                                + userViewDto.videoTitle())
                                                                 .build());
                         return video;
                 });
@@ -61,7 +61,7 @@ public class UserViewResource {
                                                 throw new ForbiddenException(Response
                                                                 .status(HttpStatus.SC_FORBIDDEN).entity(
                                                                                 "The video with title: "
-                                                                                                + userViewDto.videoTitle
+                                                                                                + userViewDto.videoTitle()
                                                                                                 + " is private")
                                                                 .build());
                                         }
@@ -72,12 +72,12 @@ public class UserViewResource {
                                 .transform((tuple) -> UserView.builder()
                                                 .user(tuple.getItem1())
                                                 .video(tuple.getItem2())
-                                                .timestamp(userViewDto.timestamp
+                                                .timestamp(userViewDto.timestamp()
                                                                 .orElse(LocalDateTime.now()))
                                                 .completionPercentage(
-                                                                userViewDto.completionPercentage
+                                                                userViewDto.completionPercentage()
                                                                                 .floatValue())
-                                                .source(userViewDto.source.orElse(UserViewSource.System))
+                                                .source(userViewDto.source().orElse(UserViewSource.System))
                                                 .build())
                                 .onItem()
                                 .ifNotNull()

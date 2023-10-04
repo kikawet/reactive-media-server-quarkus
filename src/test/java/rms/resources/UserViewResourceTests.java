@@ -22,7 +22,7 @@ import rms.model.User;
 import rms.model.Video;
 
 @QuarkusTest
-public class UserViewResourceTests {
+class UserViewResourceTests {
     @Test
     void Given_Create_When_UserView_Valid_Then_Get_Created() {
         PanacheMock.mock(User.class, Video.class);
@@ -57,7 +57,6 @@ public class UserViewResourceTests {
 
     @Test
     void Given_Create_When_UserView_Invalid_Then_Get_400() {
-
         given()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .body("{}")
