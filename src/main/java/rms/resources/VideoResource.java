@@ -3,15 +3,15 @@ package rms.resources;
 import java.net.URI;
 import java.util.List;
 
+import org.jboss.resteasy.reactive.RestResponse;
+
 import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.core.Response;
 import rms.model.Video;
 
 @Path("video")
@@ -37,10 +37,12 @@ public class VideoResource {
     }
 
     @POST
-    @Transactional
-    public Response createVideo(Video video) {
-        video.persist();
-        return Response.created(URI.create("/video/" + video.getTitle())).build();
+    public Uni<RestResponse<Void>> createVideo(Video video) {
+        Uni<Video> uniVideo = video.persist();
+        return uniVideo
+                .onItem()
+                .ifNotNull()
+                .transform(v -> RestResponse.created(URI.create("/video/" + v.getTitle())));
     }
 
     // @PUT // Used to update if a video is private or not or whom is allowed to see
