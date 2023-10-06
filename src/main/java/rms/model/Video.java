@@ -4,6 +4,8 @@ import java.net.URL;
 import java.time.Duration;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
@@ -26,6 +28,7 @@ public class Video extends PanacheEntityBase {
     @Id
     String title;
     URL url;
+    @JsonFormat(shape = Shape.STRING)
     Duration duration;
     @JsonIgnore
     boolean isPrivate;

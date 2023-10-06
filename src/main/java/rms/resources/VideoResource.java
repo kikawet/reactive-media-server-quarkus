@@ -70,15 +70,20 @@ public class VideoResource {
                     .build());
         }
 
-        Uni<Video> uniVideo = Video.builder()
+        Video video = Video.builder()
                 .title(videoDto.title())
                 .url(videoDto.url())
-                .duration(videoDto.durationSeconds())
+                .duration(videoDto.duration())
                 .isPrivate(videoDto.isPrivate().orElse(Boolean.FALSE))
-                .build()
-                .persistAndFlush();
+                .build();
 
-        return uniVideo
+        return Video.findById(videoDto.title())
+                .onItem().ifNotNull()
+                .failWith(new BadRequestException(Response.status(HttpStatus.SC_BAD_REQUEST).entity(
+                        "Already exists a video with title: '" + videoDto.title() + "'")
+                        .build()))
+                .onItem().ifNull().continueWith(video)
+                .flatMap(v -> v.persistAndFlush())
                 .map(x -> RestResponse.created(URI.create("/video/" + encodedTitle)));
     }
 
