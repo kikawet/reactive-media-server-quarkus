@@ -13,10 +13,10 @@ import jakarta.validation.constraints.PositiveOrZero;
 import rms.model.UserViewSource;
 
 public record CreateUserViewDto(
-        @NotBlank String userLogin,
-        @NotBlank String videoTitle,
-        @NotNull Optional<@PastOrPresent LocalDateTime> timestamp,
-        @PositiveOrZero @DecimalMax("100.00") @Digits(integer = 3, fraction = 2) BigDecimal completionPercentage,
-        @NotNull Optional<UserViewSource> source) {
+                @NotBlank String userLogin,
+                @NotBlank String videoTitle,
+                @NotNull Optional<@PastOrPresent LocalDateTime> timestamp,
+                @NotNull @PositiveOrZero @DecimalMax("100.00") @Digits(integer = 3, fraction = 2) BigDecimal completionPercentage,
+                @NotNull Optional<UserViewSource> source) {
 
 }

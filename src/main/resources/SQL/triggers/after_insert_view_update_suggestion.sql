@@ -5,7 +5,6 @@ DECLARE
 	shrunk_score float8;
 	uvmr "UserVideoMeta"%ROWTYPE;
 BEGIN
-	DELETE FROM "SuggestionBase" AS s WHERE s."user_login" = NEW."user_login" and s."video_title" = NEW."video_title";
 	SELECT MIN("timesPrompted") INTO min_views FROM "UserVideoMeta" WHERE "user_login" = NEW."user_login";
 	SELECT * INTO uvmr FROM "UserVideoMeta" AS uvm WHERE uvm."user_login" = NEW."user_login" and uvm."video_title" = NEW."video_title";
 
@@ -13,11 +12,22 @@ BEGIN
 	shrunk_score = (uvmr."score" - uvmr."timesPrompted" + min_views)/100;
 
 	IF rand < shrunk_score THEN
-		INSERT INTO "SuggestionBase" VALUES (NEW."user_login",NEW."video_title", uvmr."score"/100);
+		UPDATE "SuggestionBase" AS s SET score = uvmr."score"/100 WHERE s."user_login" = NEW."user_login" and s."video_title" = NEW."video_title";
+		
+		IF NOT FOUND THEN 
+			INSERT INTO "SuggestionBase" VALUES (NEW."user_login",NEW."video_title", uvmr."score"/100);
+		END IF;
 	ELSE
-		INSERT INTO "SuggestionBase" VALUES (NEW."user_login",NEW."video_title", uvmr."score"/100-1);
+		UPDATE "SuggestionBase" AS s SET score = uvmr."score"/100-1 WHERE s."user_login" = NEW."user_login" and s."video_title" = NEW."video_title";
+
+		IF NOT FOUND THEN 
+			INSERT INTO "SuggestionBase" VALUES (NEW."user_login",NEW."video_title", uvmr."score"/100-1);
+		END IF;
 	END IF;
 
+
+
+	RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
