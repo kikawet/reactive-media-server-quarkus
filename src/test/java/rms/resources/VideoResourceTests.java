@@ -39,7 +39,7 @@ public class VideoResourceTests {
         PanacheMock.mock(Video.class);
         Video v = new Video();
         v.setTitle("valid");
-        v.setIsPrivate(true);
+        v.setPrivate(true);
         Mockito.when(Video.findById(v.getTitle())).thenReturn(Uni.createFrom().item(v));
 
         given()

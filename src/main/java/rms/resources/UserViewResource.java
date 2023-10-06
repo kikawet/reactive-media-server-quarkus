@@ -57,7 +57,7 @@ public class UserViewResource {
                                 .onItem()
                                 .ifNotNull()
                                 .transform(tuple -> {
-                                        if (tuple.getItem2().getIsPrivate()) {
+                                        if (tuple.getItem2().isPrivate()) {
                                                 throw new ForbiddenException(Response
                                                                 .status(HttpStatus.SC_FORBIDDEN).entity(
                                                                                 "The video with title: "

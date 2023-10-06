@@ -2,7 +2,6 @@ package rms.model;
 
 import java.net.URL;
 import java.time.Duration;
-import java.util.Collections;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,6 +10,8 @@ import io.quarkus.hibernate.reactive.panache.PanacheEntityBase;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,16 +19,20 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Video extends PanacheEntityBase {
     @Id
     String title;
     URL url;
     Duration duration;
     @JsonIgnore
-    Boolean isPrivate = Boolean.FALSE;
+    boolean isPrivate;
+    @JsonIgnore
     @OneToMany(mappedBy = "video")
-    Set<UserView> views = Collections.emptySet();
+    Set<UserView> views;
+    @JsonIgnore
     @OneToMany(mappedBy = "video")
-    Set<Suggestion> suggestions = Collections.emptySet();
+    Set<Suggestion> suggestions;
 }
