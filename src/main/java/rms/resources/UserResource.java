@@ -13,21 +13,24 @@ import rms.model.UserView;
 
 @Path("user")
 public class UserResource {
-    @GET
-    @Path("{userId}/history")
-    public Uni<List<UserView>> getHistoryByUser(@PathParam("userId") String userId) {
-        Uni<User> user = User.findById(userId);
-        return user
-                .onItem().ifNull().failWith(new NotFoundException())
-                .onItem().ifNotNull().transform(User::getHistory);
-    }
+        @GET
+        @Path("{userId}/history")
+        public Uni<List<UserView>> getHistoryByUser(@PathParam("userId") String userId) {
+                return User.findById(userId)
+                                .onItem().ifNull().failWith(new NotFoundException())
+                                .flatMap(x -> UserView
+                                                .getByUserLogin(userId)
+                                                .page(0, 5)
+                                                .firstPage()
+                                                .list());
+        }
 
-    @GET
-    @Path("{userId}/suggestion")
-    public Uni<List<Suggestion>> getSuggestionsByUser(@PathParam("userId") String userId) {
-        Uni<User> user = User.findById(userId);
-        return user
-                .onItem().ifNull().failWith(new NotFoundException())
-                .onItem().ifNotNull().transform(User::getSuggestions);
-    }
+        @GET
+        @Path("{userId}/suggestion")
+        public Uni<List<Suggestion>> getSuggestionsByUser(@PathParam("userId") String userId) {
+                Uni<User> user = User.findById(userId);
+                return user
+                                .onItem().ifNull().failWith(new NotFoundException())
+                                .onItem().ifNotNull().transform(User::getSuggestions);
+        }
 }
