@@ -28,9 +28,12 @@ public class UserResource {
         @GET
         @Path("{userId}/suggestion")
         public Uni<List<Suggestion>> getSuggestionsByUser(@PathParam("userId") String userId) {
-                Uni<User> user = User.findById(userId);
-                return user
+                return User.findById(userId)
                                 .onItem().ifNull().failWith(new NotFoundException())
-                                .onItem().ifNotNull().transform(User::getSuggestions);
+                                .flatMap(x -> Suggestion
+                                                .getByUserLogin(userId)
+                                                .page(0, 5)
+                                                .firstPage()
+                                                .list());
         }
 }
