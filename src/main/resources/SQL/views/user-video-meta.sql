@@ -12,7 +12,7 @@ SELECT
 	    COUNT(w."source") FILTER (
 	        WHERE
 	            w."source" = 'System'
-	    ),
+	    ) AS "timesPrompted",
 		w."source"
 	FROM "userview" AS w
 	GROUP BY
