@@ -12,6 +12,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 
 import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.GET;
@@ -55,6 +56,7 @@ public class VideoResource {
     }
 
     @POST
+    @RolesAllowed("admin")
     public Uni<RestResponse<Void>> createVideo(@Valid CreateVideoDto videoDto) {
         if (videoDto == null)
             throw new BadRequestException(Response.status(HttpStatus.SC_BAD_REQUEST).entity(
