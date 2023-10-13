@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import io.quarkus.hibernate.reactive.panache.Panache;
 import io.quarkus.panache.mock.PanacheMock;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import io.quarkus.test.vertx.RunOnVertxContext;
 import io.quarkus.test.vertx.UniAsserter;
 import io.smallrye.mutiny.Uni;
@@ -21,6 +22,7 @@ public class UserResourceTests {
 
     @Test
     @RunOnVertxContext
+    @TestSecurity(user = "valid")
     void Given_GetHistoryByUser_When_User_Exists_Then_Get_History(UniAsserter asserter) {
         asserter.execute(() -> PanacheMock.mock(User.class));
         User u = new User();
@@ -54,6 +56,7 @@ public class UserResourceTests {
 
     @Test
     @RunOnVertxContext
+    @TestSecurity(user = "999")
     void Given_GetHistoryByUser_When_No_User_Exists_Then_Fails(UniAsserter asserter) {
         asserter.execute(() -> given()
                 .pathParam("userId", "999")
@@ -101,6 +104,7 @@ public class UserResourceTests {
 
     @Test
     @RunOnVertxContext
+    @TestSecurity(user = "999")
     void Given_GetSuggestionByUser_When_No_User_Exists_Then_Fails(UniAsserter asserter) {
         asserter.execute(() -> given()
                 .pathParam("userId", "999")
@@ -111,5 +115,4 @@ public class UserResourceTests {
 
         asserter.surroundWith(x -> Panache.withSession(() -> x));
     }
-
 }

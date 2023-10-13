@@ -7,7 +7,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import org.apache.http.HttpStatus;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import io.quarkus.panache.common.Sort;
@@ -21,6 +20,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import rms.dto.CreateVideoDto;
 import rms.model.Video;
 
@@ -39,7 +39,7 @@ public class VideoResource {
         try {
             title = URLDecoder.decode(encodedTitle, StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
-            throw new BadRequestException(Response.status(HttpStatus.SC_BAD_REQUEST).entity(
+            throw new BadRequestException(Response.status(Status.BAD_REQUEST).entity(
                     "Title cannot be decoded from UTF-8")
                     .build());
         }
@@ -59,7 +59,7 @@ public class VideoResource {
     @RolesAllowed("admin")
     public Uni<RestResponse<Void>> createVideo(@Valid CreateVideoDto videoDto) {
         if (videoDto == null)
-            throw new BadRequestException(Response.status(HttpStatus.SC_BAD_REQUEST).entity(
+            throw new BadRequestException(Response.status(Status.BAD_REQUEST).entity(
                     "Must provide body content")
                     .build());
 
@@ -67,7 +67,7 @@ public class VideoResource {
         try {
             encodedTitle = URLEncoder.encode(videoDto.title(), StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
-            throw new BadRequestException(Response.status(HttpStatus.SC_BAD_REQUEST).entity(
+            throw new BadRequestException(Response.status(Status.BAD_REQUEST).entity(
                     "Video title cannot be encoded into UTF-8")
                     .build());
         }
@@ -81,7 +81,7 @@ public class VideoResource {
 
         return Video.findById(videoDto.title())
                 .onItem().ifNotNull()
-                .failWith(new BadRequestException(Response.status(HttpStatus.SC_BAD_REQUEST).entity(
+                .failWith(new BadRequestException(Response.status(Status.BAD_REQUEST).entity(
                         "Already exists a video with title: '" + videoDto.title() + "'")
                         .build()))
                 .onItem().ifNull().continueWith(video)
