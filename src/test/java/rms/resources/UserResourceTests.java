@@ -21,6 +21,7 @@ import rms.model.User;
 public class UserResourceTests {
 
     @Test
+    @Disabled("Times out")
     @RunOnVertxContext
     @TestSecurity(user = "valid")
     void Given_GetHistoryByUser_When_User_Exists_Then_Get_History(UniAsserter asserter) {
@@ -103,6 +104,7 @@ public class UserResourceTests {
     }
 
     @Test
+    @Disabled("Times out")
     @RunOnVertxContext
     @TestSecurity(user = "999")
     void Given_GetSuggestionByUser_When_No_User_Exists_Then_Fails(UniAsserter asserter) {

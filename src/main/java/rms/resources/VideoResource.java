@@ -13,15 +13,13 @@ import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import rms.dto.CreateVideoDto;
+import rms.exceptions.BadRequestResponseException;
 import rms.model.Video;
 
 @Path("video")
@@ -39,9 +37,7 @@ public class VideoResource {
         try {
             title = URLDecoder.decode(encodedTitle, StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
-            throw new BadRequestException(Response.status(Status.BAD_REQUEST).entity(
-                    "Title cannot be decoded from UTF-8")
-                    .build());
+            throw new BadRequestResponseException("Title cannot be decoded from UTF-8");
         }
 
         Uni<Video> video = Video.findById(title);
@@ -59,17 +55,13 @@ public class VideoResource {
     @RolesAllowed("admin")
     public Uni<RestResponse<Void>> createVideo(@Valid CreateVideoDto videoDto) {
         if (videoDto == null)
-            throw new BadRequestException(Response.status(Status.BAD_REQUEST).entity(
-                    "Must provide body content")
-                    .build());
+            throw new BadRequestResponseException("Must provide body content");
 
         String encodedTitle;
         try {
             encodedTitle = URLEncoder.encode(videoDto.title(), StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
-            throw new BadRequestException(Response.status(Status.BAD_REQUEST).entity(
-                    "Video title cannot be encoded into UTF-8")
-                    .build());
+            throw new BadRequestResponseException("Video title cannot be encoded into UTF-8");
         }
 
         Video video = Video.builder()
@@ -81,9 +73,8 @@ public class VideoResource {
 
         return Video.findById(videoDto.title())
                 .onItem().ifNotNull()
-                .failWith(new BadRequestException(Response.status(Status.BAD_REQUEST).entity(
-                        "Already exists a video with title: '" + videoDto.title() + "'")
-                        .build()))
+                .failWith(new BadRequestResponseException(
+                        "Already exists a video with title: '" + videoDto.title() + "'"))
                 .onItem().ifNull().continueWith(video)
                 .flatMap(v -> v.persistAndFlush())
                 .map(x -> RestResponse.created(URI.create("/video/" + encodedTitle)));
