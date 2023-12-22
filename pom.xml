@@ -145,6 +145,31 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-maven-plugin</artifactId>
+        <version>10.4.1</version>
+        <configuration>
+          <!-- DEV config -->
+          <url>jdbc:postgresql://localhost:32723/quarkus</url>
+          <user>rmsUser</user>
+          <password>rmsPassword</password>
+          <cleanDisabled>false</cleanDisabled>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.1</version>
+          </dependency>
+          <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+            <version>10.4.0</version>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
+      </plugin>
     </plugins>
   </build>
   <profiles>
