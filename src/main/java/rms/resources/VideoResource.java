@@ -66,7 +66,7 @@ public class VideoResource {
 
         Video video = Video.builder()
                 .title(videoDto.title())
-                .url(videoDto.url())
+                .slug(videoDto.slug())
                 .duration(videoDto.duration())
                 .isPrivate(videoDto.isPrivate().orElse(Boolean.FALSE))
                 .build();

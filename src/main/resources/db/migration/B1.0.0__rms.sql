@@ -17,7 +17,7 @@ create table Video (
     title varchar(255) not null,
     duration numeric(21,0),
     isPrivate boolean not null,
-    url varchar(255),
+    slug varchar(255) not null,
     primary key (title)
 );
 

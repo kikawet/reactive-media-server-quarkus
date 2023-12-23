@@ -1,6 +1,5 @@
 package rms.model;
 
-import java.net.URL;
 import java.time.Duration;
 import java.util.Set;
 
@@ -27,7 +26,7 @@ import lombok.Setter;
 public class Video extends PanacheEntityBase {
     @Id
     String title;
-    URL url;
+    String slug;
     @JsonFormat(shape = Shape.STRING)
     Duration duration;
     @JsonIgnore
