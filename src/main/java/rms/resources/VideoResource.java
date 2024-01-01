@@ -6,10 +6,11 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
+import org.jboss.resteasy.reactive.RestQuery;
 import org.jboss.resteasy.reactive.RestResponse;
 
-import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
@@ -26,8 +27,17 @@ import rms.model.Video;
 public class VideoResource {
 
     @GET
-    public Uni<List<Video>> getAll() {
-        return Video.find("title", Sort.by("title")).firstPage().list();
+    public Uni<List<Video>> getAll(@RestQuery Optional<Integer> page, @RestQuery Optional<Integer> pageSize) {
+        return Video
+                .find("ORDER BY title")
+                .page(
+                        page
+                                .filter(p -> p >= 0)
+                                .orElse(0),
+                        pageSize
+                                .filter(size -> 0 <= size && size <= 50)
+                                .orElse(10))
+                .list();
     }
 
     @GET
